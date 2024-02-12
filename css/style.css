@@ -64,7 +64,11 @@ h1, h4 {
     background-color: white;
     position: absolute;
     bottom: 15px;
-    left: 170px;
+    left: 175px;
     border-radius: 50%;
 }
+
+.hidden {
+    visibility: hidden;
+};
 

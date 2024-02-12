@@ -26,6 +26,7 @@ ball.className = "ball";
 grid.appendChild(ball);
 
 
+
 /*----- event listeners -----*/
 document.addEventListener("keydown", movePaddle);
 
@@ -69,18 +70,18 @@ function movePaddle(event) {
 // Ball movements
 let ballSpeed = 1;
 let bottomPosition = 15;
-let leftPosition = 170;
+let leftPosition = 175;
 let maxLeft = 345;
-let minLeft = 15;
+let minLeft = 0;
 let maxBottom = 345;
 let minBottom = 15;
 let bottomDirection = 1;
 let leftDirection = 1;
 
+
 function moveBall() {
-    let id = null;
-    clearInterval(id);
-    id = setInterval(frame, ballSpeed);
+    clearInterval();
+    setInterval(frame, ballSpeed);
     function frame() {
         checkCollision();
         bottomPosition = bottomPosition + bottomDirection;
@@ -92,16 +93,28 @@ function moveBall() {
 
 function checkCollision () {
     wallCollision();
+    brickCollision();
+    // paddleCollision();
 };
 
 function wallCollision() {
     if (leftPosition > maxLeft || leftPosition < minLeft) {
         leftDirection = -1 * leftDirection;
     };
-    if (bottomPosition > maxBottom) {
-        
-    }
+    if (bottomPosition > maxBottom || bottomPosition < minBottom) {
+        bottomDirection = -1 * bottomDirection;
+    };
 };
 
-
-
+function brickCollision() {
+    const bricks = [...document.querySelectorAll(".brickCell")];
+    for (let brick of bricks) {
+        brickLeftPosition = brick.offsetLeft;
+        brickBottomPosition = maxBottom - brick.offsetTop;
+        if (bottomPosition >= brickBottomPosition - 15 && leftPosition >= brickLeftPosition) {
+            // try splice function to eliminate the brick
+            bottomDirection = -1 * bottomDirection;
+            leftDirection = -1 * leftDirection;
+        };
+    };
+};
