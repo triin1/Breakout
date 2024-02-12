@@ -1,0 +1,70 @@
+* {
+    font-family: 'Press Start 2P', sans-serif;
+    box-sizing: border-box;
+  }
+
+body {
+    background-color: #FAF2D3;
+    margin: 0;
+}
+#game {
+    position: relative;
+}
+
+h1, h4 {
+    text-align: center;
+    margin: 50px 0 50px 0;
+}
+
+#headboard {
+    font-size: 16px;
+    background-color: black;
+    color: white;
+    height: 50px;
+    width: 390px;
+    border: 15px solid black;
+    position: relative;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-items: center;
+}
+
+.gameGrid {
+    height: 390px;
+    width: 390px;
+    border: 15px solid black;
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(12, 30px);
+    grid-template-rows: repeat(8, 15px);
+    background-color: black;
+}
+
+.brickCell {
+    border: 1px solid black;
+    font-size: 5px;
+}
+
+.paddle {
+    height: 15px;
+    width: 90px;
+    background-color: white;
+    position: absolute;
+    bottom: 0;
+    left: 135px;
+}
+
+.ball {
+    height: 15px;
+    width: 15px;
+    background-color: white;
+    position: absolute;
+    bottom: 15px;
+    left: 170px;
+    border-radius: 50%;
+}
+
