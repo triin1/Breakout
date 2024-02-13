@@ -69,12 +69,12 @@ function movePaddle(event) {
     if(event.keyCode === 37 || event.keyCode === 65) {
         if (paddleLeftDistance > 0) {
             paddleLeftDistance -= paddleSpeed;
-            paddle.style.left = paddleLeftDistance + 5 + "px";
+            paddle.style.left = paddleLeftDistance + 15 + "px";
         }
     } else if (event.keyCode === 39 || event.keyCode === 68) {
         if (paddleLeftDistance < 270) {
             paddleLeftDistance += paddleSpeed;
-            paddle.style.left = paddleLeftDistance - 5 + "px"; 
+            paddle.style.left = paddleLeftDistance - 15 + "px"; 
         };
     };
 };
@@ -96,7 +96,6 @@ function moveBall() {
     setInterval(frame, ballSpeed);
     function frame() {
         checkCollision();
-       // checkScore();
         bottomPosition = bottomPosition + bottomDirection;
         leftPosition = leftPosition + leftDirection;
         ball.style.bottom = bottomPosition + "px";
@@ -138,10 +137,7 @@ function brickCollision() {
             state.score +=1;
         };
         scoreCounter.innerHTML = state.score;
-
-
-        // state.score++;
-        // scoreCounter.innerHTML = state.score;
+        checkWin();
         return
         };
     };
@@ -157,15 +153,23 @@ function paddleCollision () {
         bottomDirection = 0;
         leftDirection = 0;
         ball.classList.add("hidden");
+        let message = document.createElement("div");
+        message.classList.add("message");
+        message.innerHTML = "GAME OVER";
+        grid.appendChild(message);
     };
 };
 
 function checkWin () {
-    if (state.score = 384) {
+    if (state.score === 384) {
         bottomDirection = 0;
         leftDirection = 0;
         ball.classList.add("hidden");
-    }
-}
+        const message = document.createElement("div");
+        message.classList.add("message");
+        message.innerHTML = "GAME OVER";
+        grid.appendChild(message);
+    };
+};
 
 initialise();
