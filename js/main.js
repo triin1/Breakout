@@ -7,10 +7,10 @@ const brickColors = {
     "R": "#9f0000",
 };
 
-
-
 /*----- state variables -----*/
-
+const state = {
+    score: 0,
+}
 
 /*----- cached elements  -----*/
 const grid = document.querySelector(".gameGrid");
@@ -27,6 +27,8 @@ grid.appendChild(ball);
 
 let startButton = document.getElementById("start-button");
 
+let scoreCounter = document.getElementById("score");
+
 /*----- event listeners -----*/
 document.addEventListener("keydown", movePaddle);
 startButton.addEventListener("click", function() {
@@ -37,6 +39,12 @@ startButton.addEventListener("click", function() {
 /*----- functions -----*/
 
 // create a game grid without having to set up individual <div>s in HTML
+function initialise () {
+    state.score = 0;
+    scoreCounter.innerHTML = 0;
+}
+
+
 for (let row = 0; row < 8; row++) {
     for (let column = 0; column < 12; column++) {
         const cell = document.createElement("div");
@@ -88,6 +96,7 @@ function moveBall() {
     setInterval(frame, ballSpeed);
     function frame() {
         checkCollision();
+       // checkScore();
         bottomPosition = bottomPosition + bottomDirection;
         leftPosition = leftPosition + leftDirection;
         ball.style.bottom = bottomPosition + "px";
@@ -110,14 +119,29 @@ function wallCollision() {
     };
 };
 
+const bricks = [...document.querySelectorAll(".brickCell")];
+
 function brickCollision() {
-    const bricks = [...document.querySelectorAll(".brickCell")];
     for (let brick of bricks) {
         brickLeftPosition = brick.offsetLeft;
         brickBottomPosition = maxBottom - brick.offsetTop;
         if (brickLeftPosition < leftPosition + 15 && brickLeftPosition + 30 > leftPosition && brickBottomPosition < bottomPosition + 15 && brickBottomPosition + 15 > bottomPosition && !brick.classList.contains("hidden")) {
         brick.classList.add("hidden");
         bottomDirection = -1 * bottomDirection;
+        if (brickBottomPosition >= 330) {
+            state.score += 7;
+        } else if (brickBottomPosition >=300) {
+            state.score += 5;
+        } else if (brickBottomPosition >= 270) {
+            state.score += 3;
+        } else if (brickBottomPosition >= 240) {
+            state.score +=1;
+        };
+        scoreCounter.innerHTML = state.score;
+
+
+        // state.score++;
+        // scoreCounter.innerHTML = state.score;
         return
         };
     };
@@ -135,3 +159,13 @@ function paddleCollision () {
         ball.classList.add("hidden");
     };
 };
+
+function checkWin () {
+    if (state.score = 384) {
+        bottomDirection = 0;
+        leftDirection = 0;
+        ball.classList.add("hidden");
+    }
+}
+
+initialise();
