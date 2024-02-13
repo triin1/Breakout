@@ -25,10 +25,14 @@ const ball = document.createElement("div");
 ball.className = "ball";
 grid.appendChild(ball);
 
-
+let startButton = document.getElementById("start-button");
 
 /*----- event listeners -----*/
 document.addEventListener("keydown", movePaddle);
+startButton.addEventListener("click", function() {
+    moveBall();
+});
+
 
 /*----- functions -----*/
 
@@ -50,19 +54,19 @@ for (let row = 0; row < 8; row++) {
     };
 };
 
-let paddleSpeed = 10;
-let distance = 135;
+let paddleSpeed = 30;
+let paddleLeftDistance = 135;
 
 function movePaddle(event) {
-    if(event.keyCode === 37) {
-        if (distance > 0) {
-            distance -= paddleSpeed;
-            paddle.style.left = distance + 5 + "px";
+    if(event.keyCode === 37 || event.keyCode === 65) {
+        if (paddleLeftDistance > 0) {
+            paddleLeftDistance -= paddleSpeed;
+            paddle.style.left = paddleLeftDistance + 5 + "px";
         }
-    } else if (event.keyCode === 39) {
-        if (distance < 270) {
-            distance += paddleSpeed;
-            paddle.style.left = distance - 5 + "px"; 
+    } else if (event.keyCode === 39 || event.keyCode === 68) {
+        if (paddleLeftDistance < 270) {
+            paddleLeftDistance += paddleSpeed;
+            paddle.style.left = paddleLeftDistance - 5 + "px"; 
         };
     };
 };
@@ -94,14 +98,14 @@ function moveBall() {
 function checkCollision () {
     wallCollision();
     brickCollision();
-    // paddleCollision();
+    paddleCollision();
 };
 
 function wallCollision() {
     if (leftPosition > maxLeft || leftPosition < minLeft) {
         leftDirection = -1 * leftDirection;
     };
-    if (bottomPosition > maxBottom || bottomPosition < minBottom) {
+    if (bottomPosition > maxBottom) {
         bottomDirection = -1 * bottomDirection;
     };
 };
@@ -111,10 +115,23 @@ function brickCollision() {
     for (let brick of bricks) {
         brickLeftPosition = brick.offsetLeft;
         brickBottomPosition = maxBottom - brick.offsetTop;
-        if (bottomPosition >= brickBottomPosition - 15 && leftPosition >= brickLeftPosition) {
-            // try splice function to eliminate the brick
-            bottomDirection = -1 * bottomDirection;
+        if (brickLeftPosition < leftPosition + 15 && brickLeftPosition + 30 > leftPosition && brickBottomPosition < bottomPosition + 15 && brickBottomPosition + 15 > bottomPosition && !brick.classList.contains("hidden")) {
+        brick.classList.add("hidden");
+        bottomDirection = -1 * bottomDirection;
+        return
+        };
+    };
+};
+
+function paddleCollision () {
+        if (bottomDirection < 0 && paddleLeftDistance < leftPosition + 15 && paddleLeftDistance + 90 > leftPosition && 0 < bottomPosition + 15 && 15 > bottomPosition) {
+        bottomDirection = -1 * bottomDirection;
+        if (leftPosition > paddleLeftDistance && leftPosition < paddleLeftDistance + 45) {
             leftDirection = -1 * leftDirection;
         };
+    } else if (bottomPosition < 0) {
+        bottomDirection = 0;
+        leftDirection = 0;
+        ball.classList.add("hidden");
     };
 };
