@@ -13,16 +13,17 @@ body {
 
 h1 {
     text-align: center;
-    margin: 50px 0 50px 0;
+    margin: 40px 0 25px 0;
 }
 
 .button {
-    margin: 50px 0;
+    margin: 25px 0;
     display: flex;
     justify-content: center;
+    gap: 40px
 }
 
-#start-button {
+#start-button, #reload-button {
     padding: 10px;
 }
 
@@ -90,4 +91,26 @@ h1 {
     position: absolute;
     bottom: 160px;
     left: 90px;
+}
+
+.instructions {
+    font-size: 14px;
+    line-height: 30px;
+    margin: 20px 0 0 0;
+    display: flex;
+    justify-content: center
+}
+
+li {
+    margin: 0 0 0 20px;
+}
+
+.timer {
+    font-size: 20px;
+    color: white;
+    height: 45px;
+    width: auto;
+    position: absolute;
+    bottom: 130px;
+    left: 180px;
 }

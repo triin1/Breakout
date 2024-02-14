@@ -1,4 +1,4 @@
-/*----- constants -----*/
+/*---------------------------------- constants ----------------------------------*/
 
 const brickColors = {
     "Y": "#E9B824",
@@ -7,12 +7,15 @@ const brickColors = {
     "R": "#9f0000",
 };
 
-/*----- state variables -----*/
+/*------------------------------- state variables -------------------------------*/
+
 const state = {
     score: 0,
+    lives: 0,
 }
 
-/*----- cached elements  -----*/
+/*------------------------------- cached elements -------------------------------*/
+
 const grid = document.querySelector(".gameGrid");
 
 // create a paddle
@@ -27,24 +30,34 @@ grid.appendChild(ball);
 
 let startButton = document.getElementById("start-button");
 
+let resetButton = document.getElementById("reload-button");
+
 let scoreCounter = document.getElementById("score");
 
-/*----- event listeners -----*/
+let livesCounter = document.getElementById("lives");
+
+/*------------------------------- event listeners -------------------------------*/
+
 document.addEventListener("keydown", movePaddle);
+
 startButton.addEventListener("click", function() {
     moveBall();
 });
 
+resetButton.addEventListener("click", function () {
+    document.location.reload();
+});
 
-/*----- functions -----*/
+/*---------------------------------- functions ----------------------------------*/
 
-// create a game grid without having to set up individual <div>s in HTML
 function initialise () {
     state.score = 0;
-    scoreCounter.innerHTML = 0;
+    scoreCounter.innerHTML = state.score;
+    state.lives = 3;
+    livesCounter.innerHTML = state.lives;
 }
 
-
+// create a game grid without having to set up individual <div>s in HTML
 for (let row = 0; row < 8; row++) {
     for (let column = 0; column < 12; column++) {
         const cell = document.createElement("div");
@@ -62,19 +75,19 @@ for (let row = 0; row < 8; row++) {
     };
 };
 
-let paddleSpeed = 30;
+let paddleSpeed = 35;
 let paddleLeftDistance = 135;
 
 function movePaddle(event) {
     if(event.keyCode === 37 || event.keyCode === 65) {
         if (paddleLeftDistance > 0) {
             paddleLeftDistance -= paddleSpeed;
-            paddle.style.left = paddleLeftDistance + 15 + "px";
+            paddle.style.left = paddleLeftDistance + 5 + "px";
         }
     } else if (event.keyCode === 39 || event.keyCode === 68) {
         if (paddleLeftDistance < 270) {
             paddleLeftDistance += paddleSpeed;
-            paddle.style.left = paddleLeftDistance - 15 + "px"; 
+            paddle.style.left = paddleLeftDistance - 5 + "px"; 
         };
     };
 };
@@ -144,19 +157,46 @@ function brickCollision() {
 };
 
 function paddleCollision () {
-        if (bottomDirection < 0 && paddleLeftDistance < leftPosition + 15 && paddleLeftDistance + 90 > leftPosition && 0 < bottomPosition + 15 && 15 > bottomPosition) {
+    if (bottomDirection < 0 && paddleLeftDistance < leftPosition + 15 && paddleLeftDistance + 90 > leftPosition && 0 < bottomPosition + 15 && 15 > bottomPosition) {
         bottomDirection = -1 * bottomDirection;
         if (leftPosition > paddleLeftDistance && leftPosition < paddleLeftDistance + 45) {
             leftDirection = -1 * leftDirection;
         };
-    } else if (bottomPosition < 0) {
+        } else if (bottomPosition < 0) {
         bottomDirection = 0;
         leftDirection = 0;
         ball.classList.add("hidden");
-        let message = document.createElement("div");
-        message.classList.add("message");
-        message.innerHTML = "GAME OVER";
-        grid.appendChild(message);
+        if (state.lives > 1) {
+            state.lives = state.lives - 1;
+            livesCounter.innerHTML = state.lives;
+            bottomPosition = 15;
+            leftPosition = 175;
+            ball.classList.remove("hidden");
+            let countdown = document.createElement("div");
+            countdown.classList.add("timer");
+            grid.appendChild(countdown);
+            countdown.innerHTML = 3;
+            let secondsLeft = 3000;
+            const intervalId = setInterval(function() {
+                secondsLeft -= 1000;
+                countdown.innerHTML = secondsLeft / 1000;    
+                if (secondsLeft < 1) {
+                    countdown.classList.add("hidden");
+                    bottomDirection = 1;
+                    leftDirection = 1;
+                    clearInterval(intervalId); 
+                };
+            }, 1000);
+            
+            //setTimeout (continuePlay, 3000);
+        } else if (lives = 1) {
+            let message = document.createElement("div");
+            message.classList.add("message");
+            message.innerHTML = "GAME OVER";
+            grid.appendChild(message);
+            state.lives = 0;
+            livesCounter.innerHTML = state.lives;
+        };
     };
 };
 
