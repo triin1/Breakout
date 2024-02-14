@@ -20,21 +20,24 @@ h1 {
     margin: 25px 0;
     display: flex;
     justify-content: center;
-    gap: 40px
+    gap: 40px;
 }
 
 #start-button, #reload-button {
     padding: 10px;
 }
 
+#headboard, .gameGrid {
+    background-color: black;
+    border: 15px solid black;
+    position: relative;
+}
+
 #headboard {
     font-size: 16px;
-    background-color: black;
     color: white;
     height: 50px;
     width: 390px;
-    border: 15px solid black;
-    position: relative;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -44,20 +47,16 @@ h1 {
 .gameGrid {
     height: 390px;
     width: 390px;
-    border: 15px solid black;
-    position: relative;
     left: 0;
     right: 0;
     margin: auto;
     display: grid;
     grid-template-columns: repeat(12, 30px);
     grid-template-rows: repeat(8, 15px);
-    background-color: black;
 }
 
 .brickCell {
     border: 1px solid black;
-    font-size: 5px;
 }
 
 .paddle {
@@ -83,7 +82,7 @@ h1 {
     visibility: hidden;
 }
 
-.message {
+.message, .timer {
     font-size: 20px;
     color: white;
     height: 45px;
@@ -106,11 +105,6 @@ li {
 }
 
 .timer {
-    font-size: 20px;
-    color: white;
-    height: 45px;
-    width: auto;
-    position: absolute;
     bottom: 130px;
     left: 180px;
 }

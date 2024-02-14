@@ -57,7 +57,7 @@ function initialise () {
     livesCounter.innerHTML = state.lives;
 }
 
-// create a game grid without having to set up individual <div>s in HTML
+// create a game grid
 for (let row = 0; row < 8; row++) {
     for (let column = 0; column < 12; column++) {
         const cell = document.createElement("div");
@@ -187,8 +187,6 @@ function paddleCollision () {
                     clearInterval(intervalId); 
                 };
             }, 1000);
-            
-            //setTimeout (continuePlay, 3000);
         } else if (lives = 1) {
             let message = document.createElement("div");
             message.classList.add("message");
@@ -207,8 +205,9 @@ function checkWin () {
         ball.classList.add("hidden");
         const message = document.createElement("div");
         message.classList.add("message");
-        message.innerHTML = "GAME OVER";
+        message.innerHTML = "GAME OVER <br><br>  YOU WIN!";
         grid.appendChild(message);
+        return;
     };
 };
 
