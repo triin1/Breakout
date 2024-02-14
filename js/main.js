@@ -93,27 +93,23 @@ function movePaddle(event) {
 };
 
 // Ball movements
-let ballSpeed = 1;
 let bottomPosition = 15;
 let leftPosition = 175;
 let maxLeft = 345;
 let minLeft = 0;
 let maxBottom = 345;
 let minBottom = 15;
-let bottomDirection = 1;
-let leftDirection = 1;
+let bottomDirection = 4;
+let leftDirection = 4;
 
 
 function moveBall() {
-    clearInterval();
-    setInterval(frame, ballSpeed);
-    function frame() {
-        checkCollision();
-        bottomPosition = bottomPosition + bottomDirection;
-        leftPosition = leftPosition + leftDirection;
-        ball.style.bottom = bottomPosition + "px";
-        ball.style.left = leftPosition + "px";
-    };
+    checkCollision();
+    bottomPosition = bottomPosition + bottomDirection;
+    leftPosition = leftPosition + leftDirection;
+    ball.style.bottom = bottomPosition + "px";
+    ball.style.left = leftPosition + "px";
+    requestAnimationFrame(moveBall);
 };  
 
 function checkCollision () {
@@ -182,8 +178,8 @@ function paddleCollision () {
                 countdown.innerHTML = secondsLeft / 1000;    
                 if (secondsLeft < 1) {
                     countdown.classList.add("hidden");
-                    bottomDirection = 1;
-                    leftDirection = 1;
+                    bottomDirection = 4;
+                    leftDirection = 4;
                     clearInterval(intervalId); 
                 };
             }, 1000);
