@@ -7,6 +7,29 @@ const brickColors = {
     "R": "#9f0000",
 };
 
+// paddle variables
+let paddleSpeed = 35;
+let paddleLeftDistance = 135;
+let paddleBottomDistance = 0;
+let paddleWidth = 90;
+let paddleHeight = 15;
+
+// ball variables
+let bottomPosition = 15;
+let leftPosition = 175;
+let maxLeft = 345;
+let minLeft = 0;
+let maxBottom = 345;
+let minBottom = 15;
+let bottomVelocity = 4;
+let leftVelocity = 4;
+let ballHeight = 15;
+let ballWidth = 15;
+
+// brick variables
+let brickHeight = 15;
+let brickWidth = 30;
+
 /*------------------------------- state variables -------------------------------*/
 
 const state = {
@@ -57,7 +80,7 @@ function initialise () {
     livesCounter.innerHTML = state.lives;
 }
 
-// create a game grid
+// create the game grid
 for (let row = 0; row < 8; row++) {
     for (let column = 0; column < 12; column++) {
         const cell = document.createElement("div");
@@ -75,9 +98,6 @@ for (let row = 0; row < 8; row++) {
     };
 };
 
-let paddleSpeed = 35;
-let paddleLeftDistance = 135;
-
 function movePaddle(event) {
     if(event.keyCode === 37 || event.keyCode === 65) {
         if (paddleLeftDistance > 0) {
@@ -92,21 +112,10 @@ function movePaddle(event) {
     };
 };
 
-// Ball movements
-let bottomPosition = 15;
-let leftPosition = 175;
-let maxLeft = 345;
-let minLeft = 0;
-let maxBottom = 345;
-let minBottom = 15;
-let bottomDirection = 4;
-let leftDirection = 4;
-
-
 function moveBall() {
     checkCollision();
-    bottomPosition = bottomPosition + bottomDirection;
-    leftPosition = leftPosition + leftDirection;
+    bottomPosition = bottomPosition + bottomVelocity;
+    leftPosition = leftPosition + leftVelocity;
     ball.style.bottom = bottomPosition + "px";
     ball.style.left = leftPosition + "px";
     requestAnimationFrame(moveBall);
@@ -120,10 +129,10 @@ function checkCollision () {
 
 function wallCollision() {
     if (leftPosition > maxLeft || leftPosition < minLeft) {
-        leftDirection = -1 * leftDirection;
+        leftVelocity = -1 * leftVelocity;
     };
     if (bottomPosition > maxBottom) {
-        bottomDirection = -1 * bottomDirection;
+        bottomVelocity = -1 * bottomVelocity;
     };
 };
 
@@ -133,9 +142,9 @@ function brickCollision() {
     for (let brick of bricks) {
         brickLeftPosition = brick.offsetLeft;
         brickBottomPosition = maxBottom - brick.offsetTop;
-        if (brickLeftPosition < leftPosition + 15 && brickLeftPosition + 30 > leftPosition && brickBottomPosition < bottomPosition + 15 && brickBottomPosition + 15 > bottomPosition && !brick.classList.contains("hidden")) {
+        if (brickLeftPosition < leftPosition + ballWidth && brickLeftPosition + brickWidth > leftPosition && brickBottomPosition < bottomPosition + ballHeight && brickBottomPosition + brickHeight > bottomPosition && !brick.classList.contains("hidden")) {
         brick.classList.add("hidden");
-        bottomDirection = -1 * bottomDirection;
+        bottomVelocity = -1 * bottomVelocity;
         if (brickBottomPosition >= 330) {
             state.score += 7;
         } else if (brickBottomPosition >=300) {
@@ -153,16 +162,16 @@ function brickCollision() {
 };
 
 function paddleCollision () {
-    if (bottomDirection < 0 && paddleLeftDistance < leftPosition + 15 && paddleLeftDistance + 90 > leftPosition && 0 < bottomPosition + 15 && 15 > bottomPosition) {
-        bottomDirection = -1 * bottomDirection;
-        if (leftPosition > paddleLeftDistance && leftPosition < paddleLeftDistance + 45) {
-            leftDirection = -1 * leftDirection;
+    if (bottomVelocity < 0 && paddleLeftDistance < leftPosition + ballWidth && paddleLeftDistance + paddleWidth > leftPosition && paddleBottomDistance < bottomPosition + ballHeight && paddleBottomDistance + paddleHeight > bottomPosition) {
+        bottomVelocity = -1 * bottomVelocity;
+        if (leftPosition + ballWidth > paddleLeftDistance && leftPosition < paddleLeftDistance + paddleWidth/2) {
+            leftVelocity = -1 * leftVelocity;
         };
-        } else if (bottomPosition < 0) {
-        bottomDirection = 0;
-        leftDirection = 0;
+    } else if (bottomPosition < 0) {
+        bottomVelocity = 0;
+        leftVelocity = 0;
         ball.classList.add("hidden");
-        if (state.lives > 1) {
+            if (state.lives > 1) {
             state.lives = state.lives - 1;
             livesCounter.innerHTML = state.lives;
             bottomPosition = 15;
@@ -176,32 +185,33 @@ function paddleCollision () {
             const intervalId = setInterval(function() {
                 secondsLeft -= 1000;
                 countdown.innerHTML = secondsLeft / 1000;    
-                if (secondsLeft < 1) {
+                if (secondsLeft < 1000) {
                     countdown.classList.add("hidden");
-                    bottomDirection = 4;
-                    leftDirection = 4;
+                    bottomVelocity = 4;
+                    leftVelocity = 4;
                     clearInterval(intervalId); 
                 };
             }, 1000);
-        } else if (lives = 1) {
-            let message = document.createElement("div");
-            message.classList.add("message");
-            message.innerHTML = "GAME OVER";
-            grid.appendChild(message);
-            state.lives = 0;
-            livesCounter.innerHTML = state.lives;
-        };
+            } else if (lives = 1) {
+                let message = document.createElement("div");
+                message.classList.add("message");
+                message.innerHTML = "GAME OVER";
+                grid.appendChild(message);
+                state.lives = 0;
+                livesCounter.innerHTML = state.lives;
+            };
+
     };
 };
 
 function checkWin () {
     if (state.score === 384) {
-        bottomDirection = 0;
-        leftDirection = 0;
+        bottomVelocity = 0;
+        leftVelocity = 0;
         ball.classList.add("hidden");
         const message = document.createElement("div");
         message.classList.add("message");
-        message.innerHTML = "GAME OVER <br><br>  YOU WIN!";
+        message.innerHTML = "GAME OVER <br> YOU WIN!";
         grid.appendChild(message);
         return;
     };

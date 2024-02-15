@@ -90,6 +90,7 @@ h1 {
     position: absolute;
     bottom: 160px;
     left: 90px;
+    line-height: 30px;
 }
 
 .instructions {
@@ -105,6 +106,7 @@ li {
 }
 
 .timer {
+    font-size: 25px;
     bottom: 130px;
-    left: 180px;
+    left: 170px;
 }
