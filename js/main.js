@@ -11,20 +11,18 @@ const brickColors = {
 let paddleSpeed = 35;
 let paddleLeftDistance = 135;
 let paddleBottomDistance = 0;
-let paddleWidth = 90;
 let paddleHeight = 15;
+let paddleWidth = 90;
 
 // ball variables
-let bottomPosition = 15;
-let leftPosition = 175;
+let ballBottomPosition = 15;
+let ballLeftPosition = 175;
 let maxLeft = 345;
 let minLeft = 0;
 let maxBottom = 345;
-let minBottom = 15;
-let bottomVelocity = 4;
-let leftVelocity = 4;
-let ballHeight = 15;
-let ballWidth = 15;
+let ballBottomVelocity = 4;
+let ballLeftVelocity = 4;
+let ballDiameter = 15;
 
 // brick variables
 let brickHeight = 15;
@@ -73,12 +71,12 @@ resetButton.addEventListener("click", function () {
 
 /*---------------------------------- functions ----------------------------------*/
 
-function initialise () {
+function initialise() {
     state.score = 0;
     scoreCounter.innerHTML = state.score;
     state.lives = 3;
     livesCounter.innerHTML = state.lives;
-}
+};
 
 // create the game grid
 for (let row = 0; row < 8; row++) {
@@ -103,7 +101,7 @@ function movePaddle(event) {
         if (paddleLeftDistance > 0) {
             paddleLeftDistance -= paddleSpeed;
             paddle.style.left = paddleLeftDistance + 5 + "px";
-        }
+        };
     } else if (event.keyCode === 39 || event.keyCode === 68) {
         if (paddleLeftDistance < 270) {
             paddleLeftDistance += paddleSpeed;
@@ -114,25 +112,25 @@ function movePaddle(event) {
 
 function moveBall() {
     checkCollision();
-    bottomPosition = bottomPosition + bottomVelocity;
-    leftPosition = leftPosition + leftVelocity;
-    ball.style.bottom = bottomPosition + "px";
-    ball.style.left = leftPosition + "px";
+    ballBottomPosition = ballBottomPosition + ballBottomVelocity;
+    ballLeftPosition = ballLeftPosition + ballLeftVelocity;
+    ball.style.bottom = ballBottomPosition + "px";
+    ball.style.left = ballLeftPosition + "px";
     requestAnimationFrame(moveBall);
 };  
 
-function checkCollision () {
+function checkCollision() {
     wallCollision();
     brickCollision();
     paddleCollision();
 };
 
 function wallCollision() {
-    if (leftPosition > maxLeft || leftPosition < minLeft) {
-        leftVelocity = -1 * leftVelocity;
+    if (ballLeftPosition > maxLeft || ballLeftPosition < minLeft) {
+        ballLeftVelocity = -1 * ballLeftVelocity;
     };
-    if (bottomPosition > maxBottom) {
-        bottomVelocity = -1 * bottomVelocity;
+    if (ballBottomPosition > maxBottom) {
+        ballBottomVelocity = -1 * ballBottomVelocity;
     };
 };
 
@@ -142,40 +140,40 @@ function brickCollision() {
     for (let brick of bricks) {
         brickLeftPosition = brick.offsetLeft;
         brickBottomPosition = maxBottom - brick.offsetTop;
-        if (brickLeftPosition < leftPosition + ballWidth && brickLeftPosition + brickWidth > leftPosition && brickBottomPosition < bottomPosition + ballHeight && brickBottomPosition + brickHeight > bottomPosition && !brick.classList.contains("hidden")) {
-        brick.classList.add("hidden");
-        bottomVelocity = -1 * bottomVelocity;
-        if (brickBottomPosition >= 330) {
-            state.score += 7;
-        } else if (brickBottomPosition >=300) {
-            state.score += 5;
-        } else if (brickBottomPosition >= 270) {
-            state.score += 3;
-        } else if (brickBottomPosition >= 240) {
-            state.score +=1;
-        };
-        scoreCounter.innerHTML = state.score;
-        checkWin();
-        return
+        if (brickLeftPosition < ballLeftPosition + ballDiameter && brickLeftPosition + brickWidth > ballLeftPosition && brickBottomPosition < ballBottomPosition + ballDiameter && brickBottomPosition + brickHeight > ballBottomPosition && !brick.classList.contains("hidden")) {
+            brick.classList.add("hidden");
+            ballBottomVelocity = -1 * ballBottomVelocity;
+            if (brickBottomPosition >= 330) {
+                state.score += 7;
+            } else if (brickBottomPosition >=300) {
+                state.score += 5;
+            } else if (brickBottomPosition >= 270) {
+                state.score += 3;
+            } else if (brickBottomPosition >= 240) {
+                state.score +=1;
+            };
+            scoreCounter.innerHTML = state.score;
+            checkWin();
+            return
         };
     };
 };
 
-function paddleCollision () {
-    if (bottomVelocity < 0 && paddleLeftDistance < leftPosition + ballWidth && paddleLeftDistance + paddleWidth > leftPosition && paddleBottomDistance < bottomPosition + ballHeight && paddleBottomDistance + paddleHeight > bottomPosition) {
-        bottomVelocity = -1 * bottomVelocity;
-        if (leftPosition + ballWidth > paddleLeftDistance && leftPosition < paddleLeftDistance + paddleWidth/2) {
-            leftVelocity = -1 * leftVelocity;
+function paddleCollision() {
+    if (ballBottomVelocity < 0 && paddleLeftDistance < ballLeftPosition + ballDiameter && paddleLeftDistance + paddleWidth > ballLeftPosition && paddleBottomDistance < ballBottomPosition + ballDiameter && paddleBottomDistance + paddleHeight > ballBottomPosition) {
+        ballBottomVelocity = -1 * ballBottomVelocity;
+        if (ballLeftPosition > paddleLeftDistance && ballLeftPosition < paddleLeftDistance + paddleWidth/2) {
+            ballLeftVelocity = -1 * ballLeftVelocity;
         };
-    } else if (bottomPosition < 0) {
-        bottomVelocity = 0;
-        leftVelocity = 0;
+    } else if (ballBottomPosition < 0) {
+        ballBottomVelocity = 0;
+        ballLeftVelocity = 0;
         ball.classList.add("hidden");
-            if (state.lives > 1) {
+        if (state.lives > 1) {
             state.lives = state.lives - 1;
             livesCounter.innerHTML = state.lives;
-            bottomPosition = 15;
-            leftPosition = 175;
+            ballBottomPosition = 15;
+            ballLeftPosition = 175;
             ball.classList.remove("hidden");
             let countdown = document.createElement("div");
             countdown.classList.add("timer");
@@ -187,27 +185,26 @@ function paddleCollision () {
                 countdown.innerHTML = secondsLeft / 1000;    
                 if (secondsLeft < 1000) {
                     countdown.classList.add("hidden");
-                    bottomVelocity = 4;
-                    leftVelocity = 4;
+                    ballBottomVelocity = 4;
+                    ballLeftVelocity = 4;
                     clearInterval(intervalId); 
                 };
             }, 1000);
-            } else if (lives = 1) {
-                let message = document.createElement("div");
-                message.classList.add("message");
-                message.innerHTML = "GAME OVER";
-                grid.appendChild(message);
-                state.lives = 0;
-                livesCounter.innerHTML = state.lives;
-            };
-
+        } else if (lives = 1) {
+            let message = document.createElement("div");
+            message.classList.add("message");
+            message.innerHTML = "GAME OVER";
+            grid.appendChild(message);
+            state.lives = 0;
+            livesCounter.innerHTML = state.lives;
+        };
     };
 };
 
-function checkWin () {
+function checkWin() {
     if (state.score === 384) {
-        bottomVelocity = 0;
-        leftVelocity = 0;
+        ballBottomVelocity = 0;
+        ballLeftVelocity = 0;
         ball.classList.add("hidden");
         const message = document.createElement("div");
         message.classList.add("message");
